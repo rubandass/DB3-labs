@@ -4,7 +4,6 @@ Databases 3 : Using Transact-SQL : Exercises
 
 */
 
-
 --Exercises for section 1
 
 --1.1   	Develop a statement that returns all columns from Paper
@@ -52,21 +51,33 @@ Databases 3 : Using Transact-SQL : Exercises
 */
 	select top 3 with ties SemesterID from Semester order by datediff(day, StartDate, EndDate)
 
+/*
 	*******************************************
 	Exercises for section 3
-
+*/
+/*
 3.1	Develop a statement that returns the ID and full name of each person
 	who has a given name starting with 'Gr' and ending with 'n'
+*/
+	select PersonID, FullName from Person where GivenName like 'Gr%n'
 
+/*
 3.2	Develop a statement that returns the full name of every person
 	who has no letter 'e' in their full name. 
 	Output the names in alphabetical order of the family name.
+*/
+	select FullName from Person where FullName not like '%[e]%' order by FamilyName asc
 
+/*
 3.3	Develop a statement that returns the ID and Name of the papers
 	that have an ID not starting with the characters 'IT'
+*/
+	select PaperID, PaperName from Paper where PaperID not like 'IT%'
 
+/*
 3.4	Develop a statement that returns the full name of every person 
 	who has a given name with at least 5 characters 
 	and a family name beginning with a letter in the first half of the alphabet (A to M)
-
+*/
+	select FullName from Person where len(GivenName) >= 5 and FamilyName like '[A-M]%'
 
