@@ -6,22 +6,31 @@ Exercises for section 6 Subqueries
 e6.1	List the paper with the lowest average enrolment per instance. Ignore all papers with no enrolments.
 	Display the paper ID, paper name and average enrolment count.
 
-	select top 7 with ties pa.PaperID, PaperName, [Average Enrolment Count] from Paper as pa
+	select top 1 with ties 
+		pa.PaperID, PaperName, [Average Enrolment Count] from Paper as pa
 	join 
-	(select PaperID, avg(ec) as [Average Enrolment Count] from
-	(select PaperID, SemesterID, cast(count(*) as decimal(9,4)) as ec from Enrolment 
-	group by PaperID, SemesterID) as e
-	group by PaperID) as p on pa.PaperID = p.PaperID order by [Average Enrolment Count]
+		(select PaperID, avg(ec) as [Average Enrolment Count] from
+		(select PaperID, SemesterID, cast(count(*) as decimal(9,4)) as ec from Enrolment 
+		group by PaperID, SemesterID) as e
+	group by 
+		PaperID) as p on pa.PaperID = p.PaperID 
+	order by 
+		[Average Enrolment Count]
 
 e6.2	List the paper with the highest average enrolment per instance. 
 	Display the paper ID, paper name and average enrolment count.
 
-	select top 1 with ties pa.PaperID, PaperName, average from Paper as pa
+	select top 1 with ties 
+		pa.PaperID, PaperName, Average from Paper as pa
 	join 
-	(select PaperID, avg([Enrolment Count]) as average from
-	(select PaperID, SemesterID, cast(count(*) as decimal(9,4)) as [Enrolment Count] from Enrolment
-	group by PaperID, SemesterID) as e
-	group by PaperID) as p on pa.PaperID = p.PaperID order by average desc
+		(select PaperID, avg([Enrolment Count]) as Average from
+		(select PaperID, SemesterID, cast(count(*) as decimal(9,4)) as [Enrolment Count] from Enrolment
+	group by 
+		PaperID, SemesterID) as e
+	group by 
+		PaperID) as p on pa.PaperID = p.PaperID 
+	order by 
+		Average desc
 
 e6.3	For each paper that has a paper instance: list the paper ID, paper name, 
 	starting date of the earliest instance, starting date of the most recent instance, 
@@ -89,11 +98,16 @@ e7.1	In one result, list all the people who enrolled in a paper delivered during
 	The result should have three columns: PersonID, Full Name and the reason the person
 	is on the list - either 'enrolled in 2019' or 'enrolled in IN605'
 
-	select PersonID, FullName, 'enrolled in 2019' as Reason from Person
+	select 
+		PersonID, FullName, 'enrolled in 2019' as Reason from Person
 	union
-	select e.PersonID, p.FullName, 'enrolled in 2019' from Enrolment e
-	join Person p on e.PersonID = p.PersonID
-	where SemesterID like '2019%' and PaperID = 'IN605'
+	select 
+		e.PersonID, p.FullName, 'enrolled in 2019' from Enrolment e
+	join 
+		Person p on e.PersonID = p.PersonID
+	where 
+		SemesterID like '2019%' and PaperID = 'IN605'
+
 
 	select e.PersonID, p.FullName, 'Enrolled in 2019' as Reason from Enrolment e
 	join Person p on e.PersonID = p.PersonID
