@@ -99,19 +99,23 @@ e7.1	In one result, list all the people who enrolled in a paper delivered during
 	is on the list - either 'enrolled in 2019' or 'enrolled in IN605'
 
 	select 
-		PersonID, FullName, 'enrolled in 2019' as Reason from Person
-	union
-	select 
-		e.PersonID, p.FullName, 'enrolled in 2019' from Enrolment e
+		p.PersonID, p.FullName, 'enrolled in 2019' as Reason from Enrolment e
 	join 
 		Person p on e.PersonID = p.PersonID
 	where 
-		SemesterID like '2019%' and PaperID = 'IN605'
+		SemesterID like '2019%'
+	union
+	select 
+		e.PersonID, p.FullName, 'enrolled in IN605' from Enrolment e
+	join 
+		Person p on e.PersonID = p.PersonID
+	where 
+		e.PaperID = 'IN605'
 
 
 	select e.PersonID, p.FullName, 'Enrolled in 2019' as Reason from Enrolment e
 	join Person p on e.PersonID = p.PersonID
-	where e.SemesterID like '2019%' and e.PaperID = 'IN605'
+	where e.SemesterID like '2019%' or e.PaperID = 'IN605'
 
 
 e7.2	Produce one resultset with two columns. List the all Paper Names and all the Person Full Names in one column.
