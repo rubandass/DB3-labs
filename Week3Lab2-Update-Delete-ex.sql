@@ -47,8 +47,16 @@ Exercises for section 10 : DELETE
 
 e10.1	Write a statement to delete all enrolments for IN238 Extraspecial Topic in semester 2020S11.
 
+		DELETE Enrolment
+		WHERE SemesterID = '2020S1' AND PaperID = 'IN238'
 		
 
 e10.2	Delete all PaperInstances that have no enrolments.
 
-		
+		DELETE PaperInstance
+		WHERE PaperID IN
+		(
+			SELECT PaperID FROM Paper
+			where PaperID NOT IN
+			(SELECT PaperID FROM Enrolment)
+		)
