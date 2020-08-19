@@ -17,7 +17,6 @@ e12.1		Create a SP that returns the people with a family name that
 			WHERE FamilyName LIKE '[AEIOU]%'
 			GO
 			EXEC getPersonListStartsVowel
-		
 			
 
 e12.2		Create a SP that accepts a semesterID parameter and returns the papers that
@@ -36,16 +35,35 @@ e12.3		Modify the SP of 12.2 so that the parameter is optional.
 			If the user	does not supply a parameter value default to the current semester.
 			If there is no current semester default to the most recent semester.
 
-			CREATE PROCEDURE getPapersFromOptionalSemester(@SemesterID nvarchar(10) = NULL)
+			CREATE OR ALTER PROCEDURE getPapersFromSemester(@SemesterID nvarchar(10) = NULL)
 			AS
-			IF @SemesterID IS NULL
+			BEGIN
+				IF @SemesterID IS NULL
+					SET @SemesterID = (SELECT DISTINCT TOP 1 WITH TIES s.SemesterID FROM Enrolment e
+						JOIN Semester s ON e.SemesterID = s.SemesterID
+						WHERE s.StartDate <= GETDATE() AND s.EndDate >= GETDATE()
+						ORDER BY s.SemesterID)
+				IF @SemesterID IS NULL
+					SET @SemesterID = (SELECT DISTINCT TOP 1 WITH TIES s.SemesterID FROM Enrolment e
+						JOIN Semester s ON e.SemesterID = s.SemesterID
+						WHERE s.StartDate <= GETDATE()
+						ORDER BY s.SemesterID)
+
 				SELECT DISTINCT p.PaperID, p.PaperName FROM Enrolment e
 				JOIN Paper p on e.PaperID = p.PaperID
-				WHERE SemesterID = @SemesterID OR SemesterID IS NULL
+				WHERE SemesterID = @SemesterID
+			END
 			GO
 			EXEC getPapersFromSemester '2019S2'
 
 e12.4		Create a SP that creates a new semester record. the user must supply all
 			appropriate input parameters.
 
-		
+			CREATE PROCEDURE insertSemester(@SemesterID nvarchar(10), @StartDate datetime, @EndDate datetime)
+			AS
+			BEGIN
+				INSERT Semester (SemesterID, StartDate, EndDate)
+				VALUES (@SemesterID, @StartDate, @EndDate)
+			END
+			GO
+			EXEC insertSemester '2020S2', '19-July-2020', '25-Nov-2020'
