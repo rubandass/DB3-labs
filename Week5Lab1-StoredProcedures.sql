@@ -39,15 +39,15 @@ e12.3		Modify the SP of 12.2 so that the parameter is optional.
 			AS
 			BEGIN
 				IF @SemesterID IS NULL
-					SET @SemesterID = (SELECT DISTINCT TOP 1 WITH TIES s.SemesterID FROM Enrolment e
+					SET @SemesterID = (SELECT DISTINCT TOP 1 WITH TIES e.SemesterID FROM Enrolment e
 						JOIN Semester s ON e.SemesterID = s.SemesterID
 						WHERE s.StartDate <= GETDATE() AND s.EndDate >= GETDATE()
-						ORDER BY s.SemesterID)
+						ORDER BY e.SemesterID)
 				IF @SemesterID IS NULL
-					SET @SemesterID = (SELECT DISTINCT TOP 1 WITH TIES s.SemesterID FROM Enrolment e
+					SET @SemesterID = (SELECT DISTINCT TOP 1 WITH TIES e.SemesterID FROM Enrolment e
 						JOIN Semester s ON e.SemesterID = s.SemesterID
 						WHERE s.StartDate <= GETDATE()
-						ORDER BY s.SemesterID)
+						ORDER BY e.SemesterID DESC)
 
 				SELECT DISTINCT p.PaperID, p.PaperName FROM Enrolment e
 				JOIN Paper p on e.PaperID = p.PaperID
