@@ -59,3 +59,39 @@
 							) AS st
 						)
 	ORDER BY t.title
+
+--10.
+	SELECT p.pub_name, COUNT(*) AS [Books Published] FROM publishers p
+	JOIN titles t ON p.pub_id = t.pub_id
+	WHERE p.state != 'CA'
+	GROUP BY t.pub_id,p.pub_name
+	ORDER BY p.pub_name
+
+--11.
+	SELECT t.title, COUNT(*) AS [Stores Count] FROM titles t
+	JOIN sales s ON t.title_id = s.title_id
+	GROUP BY t.title
+
+--12.
+	SELECT t.title, st.stor_name, s.qty FROM titles t
+	JOIN sales s ON t.title_id = s.title_id
+	JOIN stores st ON s.stor_id = st.stor_id
+	GROUP BY t.title, s.qty, st.stor_name
+	ORDER BY t.title, st.stor_name
+
+--13.
+	UPDATE roysched
+	SET royalty = royalty + 2
+	FROM roysched
+	WHERE title_id IN ( SELECT s.title_id FROM titles t
+						JOIN sales s ON t.title_id = s.title_id
+						GROUP BY s.title_id
+						HAVING SUM(qty) > 30	)
+						
+--14.
+	SELECT type FROM
+	(	SELECT type, pub_id FROM titles
+	GROUP BY type, pub_id	) AS rt
+	GROUP BY type
+	HAVING COUNT(*) > 1
+	
