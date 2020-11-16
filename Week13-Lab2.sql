@@ -23,7 +23,7 @@ DECLARE @logFileGrowth nvarchar(500)
 DECLARE @exeDataBase nvarchar(4000)
 DECLARE @exeUser nvarchar(4000)
 
---Get the default database name and set to @_DefaultDatabase variable.
+--Get the default database name and set to @_DefaultDatabase variable. 
 SET @_DefaultDatabase = (
 							SELECT default_database_name FROM sys.server_principals
 							WHERE name = 'sa'
